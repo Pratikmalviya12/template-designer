@@ -28,7 +28,6 @@ const Section: React.FC<SectionProps> = ({ section, index }) => {
     updateSection(section.id, { id: editedId });
     setIsEditing(false);
   };
-
   return (
     <Draggable draggableId={section.id} index={index}>
       {(provided, snapshot) => (

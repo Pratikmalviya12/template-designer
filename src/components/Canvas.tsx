@@ -80,7 +80,7 @@ const Canvas: React.FC = () => {
             {sections.length === 0 && 'Drag sections from the sidebar to start designing'}
           </Typography>
           
-          <Droppable droppableId="sections-list" type="SECTION">
+          <Droppable droppableId="canvas-drop-area" type="SECTION">
             {(provided, snapshot) => (
               <Box 
                 ref={provided.innerRef}
@@ -111,4 +111,4 @@ const Canvas: React.FC = () => {
   );
 };
 
-export default Canvas; 
+export default Canvas;

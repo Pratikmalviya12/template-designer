@@ -113,9 +113,10 @@ interface TemplateState {
   canvasWidth: string;
   canvasHeight: string;
   updateCanvasDimensions: (width?: string, height?: string) => void;
+  generateTemplateHtml: () => string;
 }
 
-export const useStore = create<TemplateState>((set) => ({
+export const useStore = create<TemplateState>((set, get) => ({
   currentTemplate: {
     id: uuidv4(),
     name: 'Untitled Template',
@@ -399,6 +400,72 @@ export const useStore = create<TemplateState>((set) => ({
         name
       }
     })),
+
+  generateTemplateHtml: () => {
+    const state = get();
+    const { sections, currentTemplate, canvasWidth } = state;
+
+    const generateComponentHtml = (component: EmailComponent): string => {
+      const style = component.style || {};
+      const inlineStyle = Object.entries(style)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join('; ');
+
+      switch (component.type) {
+        case 'text':
+        case 'heading':
+        case 'paragraph':
+          return `<div id="${component.id}" data-type="${component.type}" style="${inlineStyle}">${component.content}</div>`;
+        case 'image':
+          return `<img id="${component.id}" data-type="${component.type}" src="${component.properties?.src || component.content}" alt="${component.properties?.altText || ''}" style="${inlineStyle}" />`;
+        case 'button':
+          return `<button id="${component.id}" data-type="${component.type}" style="${inlineStyle}">${component.content}</button>`;
+        case 'video':
+          return `<video id="${component.id}" data-type="${component.type}" src="${component.properties?.src || ''}" style="${inlineStyle}" ${component.properties?.controls ? 'controls' : ''} ${component.properties?.autoplay ? 'autoplay' : ''} ${component.properties?.loop ? 'loop' : ''}></video>`;
+        case 'spacer':
+          return `<div id="${component.id}" data-type="${component.type}" style="height: ${style.height || '40px'}"></div>`;
+        case 'divider':
+          return `<hr id="${component.id}" data-type="${component.type}" style="${inlineStyle}" />`;
+        case 'html':
+          return `<div id="${component.id}" data-type="${component.type}">${component.content}</div>`;
+        default:
+          return `<div id="${component.id}" data-type="${component.type}" style="${inlineStyle}">${component.content}</div>`;
+      }
+    };
+
+    const generateSectionHtml = (section: Section): string => {
+      const columnWidth = `${100 / section.columns}%`;
+      const columnsHtml = section.components
+        .map((column, columnIndex) => {
+          const componentsHtml = column
+            .map(component => generateComponentHtml(component))
+            .join('\n');
+          return `<div class="template-column" data-column-index="${columnIndex}" style="width: ${columnWidth}; padding: 10px;">${componentsHtml}</div>`;
+        })
+        .join('\n');
+
+      return `<section id="${section.id}" class="template-section" data-columns="${section.columns}" style="display: flex; width: 100%;">${columnsHtml}</section>`;
+    };
+
+    const sectionsHtml = sections
+      .map(section => generateSectionHtml(section))
+      .join('\n');
+
+    return `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${currentTemplate.name}</title>
+    <!-- Template ID: ${currentTemplate.id} -->
+</head>
+<body style="margin: 0; padding: 0;">
+    <div id="template-container" style="max-width: ${canvasWidth}; margin: 0 auto; padding: 20px;">
+        ${sectionsHtml}
+    </div>
+</body>
+</html>`;
+  }
 }));
 
 export interface ComponentDefaults {
