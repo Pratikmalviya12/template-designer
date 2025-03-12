@@ -75,7 +75,9 @@ const EmailComponent: React.FC<EmailComponentProps> = ({
                 autoPlay={component.properties?.autoplay}
               />
             ) : (
-              component.content || component.type
+              <p style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
+                {component.content || component.type}
+              </p>
             )}
             <Box
               className="component-actions"

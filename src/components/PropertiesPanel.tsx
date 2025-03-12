@@ -45,7 +45,6 @@ export interface ComponentDefaults {
 const PropertiesPanel: React.FC = () => {
   const {
     selectedComponent,
-    currentTemplate,
     updateComponent,
     updateComponentStyle,
   } = useStore();
@@ -103,13 +102,7 @@ const PropertiesPanel: React.FC = () => {
           <>
             <TextField
               label="Content"
-              value={
-                currentTemplate.sections.find(
-                  (section) => section.id === selectedComponent.sectionId
-                )?.components[selectedComponent.columnIndex][
-                  selectedComponent.index
-                ]?.content
-              }
+              value={selectedComponent.component.content}
               onChange={(e) =>
                 updateComponent(selectedComponent.component.id, {
                   content: e.target.value,
@@ -321,27 +314,14 @@ const PropertiesPanel: React.FC = () => {
           <Stack spacing={2}>
             <TextField
               label="Link URL"
-              value={
-                currentTemplate.sections.find(
-                  (section) => section.id === selectedComponent.sectionId
-                )?.components[selectedComponent.columnIndex][
-                  selectedComponent.index
-                ]?.properties?.url
-              }
+              value={selectedComponent.component.properties?.url}
               onChange={(e) => handlePropertyChange("url", e.target.value)}
               fullWidth
             />
             <FormControl fullWidth>
               <InputLabel>Button Type</InputLabel>
               <Select
-                value={
-                  currentTemplate.sections.find(
-                    (section) => section.id === selectedComponent.sectionId
-                  )?.components[selectedComponent.columnIndex][
-                    selectedComponent.index
-                  ]?.properties?.buttonType ||
-                  "primary"
-                }
+                value={selectedComponent.component.properties?.buttonType || "primary"}
                 onChange={(e) =>
                   handlePropertyChange("buttonType", e.target.value)
                 }
@@ -372,13 +352,7 @@ const PropertiesPanel: React.FC = () => {
           <Stack spacing={2}>
             <TextField
               label="Image Source"
-              value={
-                currentTemplate.sections.find(
-                  (section) => section.id === selectedComponent.sectionId
-                )?.components[selectedComponent.columnIndex][
-                  selectedComponent.index
-                ]?.properties?.src
-              }
+              value={selectedComponent.component.properties?.src}
               onChange={(e) =>
                 updateComponent(selectedComponent.component.id, {
                   properties: { src: e.target.value },
@@ -448,13 +422,7 @@ const PropertiesPanel: React.FC = () => {
           <Stack spacing={2}>
             <TextField
               label="Video Source"
-              value={
-                currentTemplate.sections.find(
-                  (section) => section.id === selectedComponent.sectionId
-                )?.components[selectedComponent.columnIndex][
-                  selectedComponent.index
-                ]?.properties?.src
-              }
+              value={selectedComponent.component.properties?.src}
               onChange={(e) =>
                 updateComponent(selectedComponent.component.id, {
                   properties: { src: e.target.value },

@@ -1,14 +1,25 @@
 import React from 'react';
-import { Paper, Typography, Box } from '@mui/material';
+import { Paper, Typography, Box, TextField, Stack } from '@mui/material';
 import { useStore } from '../store/useStore';
 import Section from './Section';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 
 const Canvas: React.FC = () => {
-  const { sections } = useStore();
+  const { sections, canvasWidth, canvasHeight, updateCanvasDimensions, currentTemplate, updateTemplateName } = useStore();
 
   const handleDragEnd = (result: DropResult) => {
-    // Drag and drop handling will be implemented later
+    if (!result.destination) return;
+
+    const sourceIndex = result.source.index;
+    const destinationIndex = result.destination.index;
+
+    // Reorder sections
+    const reorderedSections = Array.from(sections);
+    const [removed] = reorderedSections.splice(sourceIndex, 1);
+    reorderedSections.splice(destinationIndex, 0, removed);
+
+    // Update the store with the new order
+    useStore.setState({ sections: reorderedSections });
   };
 
   return (
@@ -20,13 +31,43 @@ const Canvas: React.FC = () => {
         boxSizing: 'border-box'
       }
     }}>
+      <Stack 
+        direction="row" 
+        spacing={2} 
+        sx={{ mb: 2 }}
+        justifyContent="center"
+        alignItems="center"
+      >
+        <TextField
+          label="Template Name"
+          value={currentTemplate.name}
+          size="small"
+          sx={{ width: 200 }}
+          onChange={(e) => updateTemplateName(e.target.value)}
+        />
+        <TextField
+          label="Canvas Width"
+          defaultValue={canvasWidth}
+          size="small"
+          sx={{ width: 150 }}
+          onChange={(e) => updateCanvasDimensions(e.target.value)}
+        />
+        <TextField
+          label="Canvas Height"
+          defaultValue={canvasHeight}
+          size="small"
+          sx={{ width: 150 }}
+          onChange={(e) => updateCanvasDimensions(undefined, e.target.value)}
+        />
+      </Stack>
+
       <DragDropContext onDragEnd={handleDragEnd}>
         <Paper sx={{ 
           p: 3,
           margin: 'auto',
-          minHeight: 800, 
+          minHeight: canvasHeight,
           bgcolor: 'white',
-          width: '600px'
+          width: canvasWidth
         }}>
           <Typography 
             variant="h6" 
@@ -39,17 +80,25 @@ const Canvas: React.FC = () => {
             {sections.length === 0 && 'Drag sections from the sidebar to start designing'}
           </Typography>
           
-          <Droppable droppableId="canvas-drop-area">
-            {(provided) => (
+          <Droppable droppableId="sections-list" type="SECTION">
+            {(provided, snapshot) => (
               <Box 
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                sx={{ '& > *:not(:last-child)': { mb: 2 } }}
+                sx={{ 
+                  '& > *:not(:last-child)': { mb: 2 },
+                  minHeight: 100,
+                  transition: 'all 0.2s ease',
+                  border: snapshot.isDraggingOver ? '2px dashed' : '2px solid transparent',
+                  borderRadius: 1,
+                  p: snapshot.isDraggingOver ? 2 : 0
+                }}
               >
-                {sections.map((section) => (
+                {sections.map((section, index) => (
                   <Section 
                     key={section.id} 
-                    section={section} 
+                    section={section}
+                    index={index}
                   />
                 ))}
                 {provided.placeholder}

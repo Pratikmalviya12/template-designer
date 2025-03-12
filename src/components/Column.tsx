@@ -39,7 +39,6 @@ const Column: React.FC<ColumnProps> = ({ sectionId, columnIndex, components }) =
           {...provided.droppableProps}
           sx={{
             minHeight: 100,
-            p: 1,
             border: '1px dashed',
             borderColor: snapshot.isDraggingOver ? 'primary.main' : 'grey.300',
             bgcolor: snapshot.isDraggingOver ? 'action.hover' : 'transparent',

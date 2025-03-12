@@ -87,6 +87,8 @@ interface TemplateState {
   addSection: (columns: number) => void;
   removeSection: (sectionId: string) => void;
   duplicateSection: (sectionId: string) => void;
+  updateSection: (sectionId: string, updates: Partial<Section>) => void;
+  updateTemplateName: (name: string) => void;
   addComponent: (sectionId: string, columnIndex: number, componentType: ComponentType) => void;
   removeComponent: (sectionId: string, columnIndex: number, index: number) => void;
   duplicateComponent: (sectionId: string, columnIndex: number, index: number) => void;
@@ -108,6 +110,9 @@ interface TemplateState {
     property: string,
     value: string
   ) => void;
+  canvasWidth: string;
+  canvasHeight: string;
+  updateCanvasDimensions: (width?: string, height?: string) => void;
 }
 
 export const useStore = create<TemplateState>((set) => ({
@@ -120,6 +125,13 @@ export const useStore = create<TemplateState>((set) => ({
   selectedSectionId: null,
   templates: [],
   sections: [],
+  canvasWidth: '600px',
+  canvasHeight: 'auto',
+  updateCanvasDimensions: (width?: string, height?: string) => 
+    set((state) => ({
+      canvasWidth: width || state.canvasWidth,
+      canvasHeight: height || state.canvasHeight
+    })),
   
   addSection: (columns) => set((state) => ({
     sections: [...state.sections, {
@@ -360,6 +372,33 @@ export const useStore = create<TemplateState>((set) => ({
         } : null
       };
     }),
+
+  updateSection: (sectionId, updates) => 
+    set((state) => {
+      // Update in sections array
+      const newSections = state.sections.map(section => 
+        section.id === sectionId ? { ...section, ...updates } : section
+      );
+
+      // Update in currentTemplate
+      const newTemplate = { ...state.currentTemplate };
+      newTemplate.sections = newTemplate.sections.map(section => 
+        section.id === sectionId ? { ...section, ...updates } : section
+      );
+
+      return {
+        sections: newSections,
+        currentTemplate: newTemplate
+      };
+    }),
+
+  updateTemplateName: (name) => 
+    set((state) => ({
+      currentTemplate: {
+        ...state.currentTemplate,
+        name
+      }
+    })),
 }));
 
 export interface ComponentDefaults {
