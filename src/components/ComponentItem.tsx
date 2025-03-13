@@ -13,7 +13,6 @@ import {
   Image as ImageIcon,
   SmartButton as ButtonIcon,
   Share as SocialIcon,
-  ShareOutlined as SocialShareIcon,
   Menu as MenuIcon,
   VideoLibrary as VideoIcon,
   Timer as TimerIcon,
@@ -48,11 +47,8 @@ const ComponentItem: React.FC<ComponentItemProps> = ({
         return <VideoIcon />;
       case "timer":
         return <TimerIcon />;
-      // Social
       case "social":
         return <SocialIcon />;
-      case "socialShare":
-        return <SocialShareIcon />;
       case "menu":
         return <MenuIcon />;
       default:

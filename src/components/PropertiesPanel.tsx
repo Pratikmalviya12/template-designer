@@ -15,8 +15,18 @@ import {
   FormControlLabel,
   Tabs,
   Tab,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
-import { useStore, ComponentStyle } from "../store/useStore";
+import { useStore, ComponentStyle, SocialMediaItem } from "../store/useStore";
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  LinkedIn,
+  YouTube,
+  Pinterest,
+} from '@mui/icons-material';
 
 interface MenuItemType {
   text: string;
@@ -33,6 +43,7 @@ export interface ComponentProperties {
   endDate?: string;
   format?: string;
   menuItems?: Array<{ text: string; url: string }>;
+  socialMedia?: Array<SocialMediaItem>;
   [key: string]: any;
 }
 
@@ -70,6 +81,8 @@ const PropertiesPanel: React.FC = () => {
     );
   }
 
+  const { component } = selectedComponent;
+
   const handlePropertyChange = (property: string, value: any) => {
     updateComponent(selectedComponent.component.id, {
       properties: {
@@ -91,8 +104,43 @@ const PropertiesPanel: React.FC = () => {
     }
   };
 
+  const handleSocialMediaUpdate = (index: number, updates: Partial<SocialMediaItem>) => {
+    const currentSocialMedia = selectedComponent.component.properties?.socialMedia || [];
+    const updatedSocialMedia = [...currentSocialMedia];
+    updatedSocialMedia[index] = {
+      ...updatedSocialMedia[index],
+      ...updates
+    };
+
+    updateComponent(selectedComponent.component.id, {
+      properties: {
+        ...selectedComponent.component.properties,
+        socialMedia: updatedSocialMedia
+      }
+    });
+  };
+
+  const getSocialIcon = (type: string) => {
+    switch(type) {
+      case 'facebook':
+        return <Facebook />;
+      case 'twitter':
+        return <Twitter />;
+      case 'instagram':
+        return <Instagram />;
+      case 'linkedin':
+        return <LinkedIn />;
+      case 'youtube':
+        return <YouTube />;
+      case 'pinterest':
+        return <Pinterest />;
+      default:
+        return null;
+    }
+  };
+
   const renderBasicProperties = () => {
-    const showContent = !["image", "video"].includes(
+    const showContent = !["image", "video", "timer", "menu"].includes(
       selectedComponent.component.type
     );
 
@@ -668,6 +716,78 @@ const PropertiesPanel: React.FC = () => {
               </Select>
             </FormControl>
           </Stack>
+        );
+
+      case "social":
+        return (
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="subtitle2" sx={{ mb: 1 }}>
+              Social Media Icons
+            </Typography>
+            {component.properties?.socialMedia?.map((item, index) => (
+              <Box
+                key={`${item.type}-${index}`}
+                sx={{
+                  mb: 2,
+                  p: 2,
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  borderRadius: 1,
+                }}
+              >
+                <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1 }}>
+                  <Tooltip title={item.type.charAt(0).toUpperCase() + item.type.slice(1)}>
+                    <IconButton
+                      size="small"
+                      sx={{
+                        color: item.enabled ? 'inherit' : 'action.disabled',
+                        '&:hover': {
+                          color: theme => {
+                            switch(item.type) {
+                              case 'facebook':
+                                return '#1877F2';
+                              case 'twitter':
+                                return '#1DA1F2';
+                              case 'instagram':
+                                return '#E4405F';
+                              case 'linkedin':
+                                return '#0A66C2';
+                              case 'youtube':
+                                return '#FF0000';
+                              case 'pinterest':
+                                return '#BD081C';
+                              default:
+                                return theme.palette.primary.main;
+                            }
+                          }
+                        }
+                      }}
+                    >
+                      {getSocialIcon(item.type)}
+                    </IconButton>
+                  </Tooltip>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={item.enabled}
+                        onChange={(e) => handleSocialMediaUpdate(index, { enabled: e.target.checked })}
+                        size="small"
+                      />
+                    }
+                    label="Enabled"
+                  />
+                </Stack>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="URL"
+                  value={item.url}
+                  onChange={(e) => handleSocialMediaUpdate(index, { url: e.target.value })}
+                  sx={{ mt: 1 }}
+                />
+              </Box>
+            ))}
+          </Box>
         );
 
       default:

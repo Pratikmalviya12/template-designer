@@ -1,13 +1,13 @@
 import React from 'react';
 import { Paper } from '@mui/material';
 import { Droppable, DroppableProvided, DroppableStateSnapshot } from 'react-beautiful-dnd';
-import { EmailComponent as EmailComponentType, useStore } from '../store/useStore';
-import EmailComponent from './EmailComponent';
+import { DraggableComponent as DraggableComponentType, useStore } from '../store/useStore';
+import DraggableComponent from './DraggableComponent';
 
 interface ColumnProps {
   sectionId: string;
   columnIndex: number;
-  components: EmailComponentType[];
+  components: DraggableComponentType[];
 }
 
 const Column: React.FC<ColumnProps> = ({ sectionId, columnIndex, components }) => {
@@ -53,7 +53,7 @@ const Column: React.FC<ColumnProps> = ({ sectionId, columnIndex, components }) =
           onDragOver={handleDragOver}
         >
           {components.map((component, index) => (
-            <EmailComponent
+            <DraggableComponent
               key={component.id}
               component={component}
               sectionId={sectionId}

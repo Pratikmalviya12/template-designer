@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import {
   Article as ContentIcon,
-  Share as SocialIcon,
   ExpandMore as ExpandMoreIcon,
 } from '@mui/icons-material';
 import { ComponentType } from '../store/useStore';
@@ -30,13 +29,7 @@ const Sidebar: React.FC = () => {
         { type: 'button', label: 'Button', content: 'Click Me' },
         { type: 'video', label: 'Video', content: '' },
         { type: 'timer', label: 'Timer', content: '' },
-      ],
-    },
-    'Social': {
-      icon: <SocialIcon />,
-      components: [
-        { type: 'social', label: 'Social Follow', content: '' },
-        { type: 'socialShare', label: 'Social Share', content: '' },
+        { type: 'social', label: 'Social', content: '' },
         { type: 'menu', label: 'Menu', content: '' },
       ],
     },

@@ -50,7 +50,7 @@ const Section: React.FC<SectionProps> = ({ section, index }) => {
           {isHovered && (
             <Box sx={{
               position: 'absolute',
-              top: -12,
+              top: -30,
               right: 8,
               bgcolor: 'white',
               borderRadius: 1,

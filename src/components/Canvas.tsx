@@ -99,7 +99,7 @@ const Canvas: React.FC = () => {
               color: 'text.secondary' 
             }}
           >
-            {sections.length === 0 && 'Drag sections from the sidebar to start designing'}
+            {sections.length === 0 && 'Select sections from the sidebar to start designing'}
           </Typography>
           
           <Droppable droppableId="canvas-drop-area" type="SECTION">
