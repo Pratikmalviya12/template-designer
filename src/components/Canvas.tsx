@@ -1,11 +1,12 @@
 import React from 'react';
-import { Paper, Typography, Box, TextField, Stack } from '@mui/material';
+import { Paper, Typography, Box, TextField, Stack, Button } from '@mui/material';
 import { useStore } from '../store/useStore';
 import Section from './Section';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import { Download as DownloadIcon } from '@mui/icons-material';
 
 const Canvas: React.FC = () => {
-  const { sections, canvasWidth, canvasHeight, updateCanvasDimensions, currentTemplate, updateTemplateName } = useStore();
+  const { sections, canvasWidth, canvasHeight, updateCanvasDimensions, currentTemplate, updateTemplateName, generateTemplateHtml } = useStore();
 
   const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -20,6 +21,19 @@ const Canvas: React.FC = () => {
 
     // Update the store with the new order
     useStore.setState({ sections: reorderedSections });
+  };
+
+  const handleDownload = () => {
+    const html = generateTemplateHtml();
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${currentTemplate.name.toLowerCase().replace(/\s+/g, '-')}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -59,6 +73,14 @@ const Canvas: React.FC = () => {
           sx={{ width: 150 }}
           onChange={(e) => updateCanvasDimensions(undefined, e.target.value)}
         />
+        <Button
+          variant="contained"
+          startIcon={<DownloadIcon />}
+          onClick={handleDownload}
+          sx={{ ml: 'auto !important' }}
+        >
+          Download Template
+        </Button>
       </Stack>
 
       <DragDropContext onDragEnd={handleDragEnd}>

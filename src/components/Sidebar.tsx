@@ -10,12 +10,11 @@ import {
   AccordionDetails,
 } from '@mui/material';
 import {
-  ViewColumn as LayoutIcon,
   Article as ContentIcon,
   Share as SocialIcon,
   ExpandMore as ExpandMoreIcon,
 } from '@mui/icons-material';
-import { useStore, ComponentType } from '../store/useStore';
+import { ComponentType } from '../store/useStore';
 import SectionSelector from './SectionSelector';
 import ComponentItem from './ComponentItem';
 
