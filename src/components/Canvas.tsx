@@ -2,26 +2,11 @@ import React from 'react';
 import { Paper, Typography, Box, TextField, Stack, Button } from '@mui/material';
 import { useStore } from '../store/useStore';
 import Section from './Section';
-import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
+import { Droppable } from 'react-beautiful-dnd';
 import { Download as DownloadIcon } from '@mui/icons-material';
 
 const Canvas: React.FC = () => {
   const { sections, canvasWidth, canvasHeight, updateCanvasDimensions, currentTemplate, updateTemplateName, generateTemplateHtml } = useStore();
-
-  const handleDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
-
-    const sourceIndex = result.source.index;
-    const destinationIndex = result.destination.index;
-
-    // Reorder sections
-    const reorderedSections = Array.from(sections);
-    const [removed] = reorderedSections.splice(sourceIndex, 1);
-    reorderedSections.splice(destinationIndex, 0, removed);
-
-    // Update the store with the new order
-    useStore.setState({ sections: reorderedSections });
-  };
 
   const handleDownload = () => {
     const html = generateTemplateHtml();
@@ -83,52 +68,48 @@ const Canvas: React.FC = () => {
         </Button>
       </Stack>
 
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <Paper sx={{ 
-          p: 3,
-          margin: 'auto',
-          minHeight: canvasHeight,
-          bgcolor: 'white',
-          width: canvasWidth
-        }}>
-          <Typography 
-            variant="h6" 
-            sx={{ 
-              mb: 2, 
-              textAlign: 'center', 
-              color: 'text.secondary' 
-            }}
-          >
-            {sections.length === 0 && 'Select sections from the sidebar to start designing'}
-          </Typography>
-          
-          <Droppable droppableId="canvas-drop-area" type="SECTION">
-            {(provided, snapshot) => (
-              <Box 
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                sx={{ 
-                  '& > *:not(:last-child)': { mb: 2 },
-                  minHeight: 100,
-                  transition: 'all 0.2s ease',
-                  border: snapshot.isDraggingOver ? '2px dashed' : '2px solid transparent',
-                  borderRadius: 1,
-                  p: snapshot.isDraggingOver ? 2 : 0
-                }}
-              >
-                {sections.map((section, index) => (
-                  <Section 
-                    key={section.id} 
-                    section={section}
-                    index={index}
-                  />
-                ))}
-                {provided.placeholder}
-              </Box>
-            )}
-          </Droppable>
-        </Paper>
-      </DragDropContext>
+      <Paper sx={{ 
+        p: 3,
+        margin: 'auto',
+        minHeight: canvasHeight,
+        bgcolor: 'white',
+        width: canvasWidth
+      }}>
+        <Typography 
+          variant="h6" 
+          sx={{ 
+            mb: 2, 
+            textAlign: 'center', 
+            color: 'text.secondary' 
+          }}
+        >
+          {sections.length === 0 && 'Select sections from the sidebar to start designing'}
+        </Typography>
+        
+        <Droppable droppableId="canvas-sections">
+          {(provided, snapshot) => (
+            <div 
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              style={{ 
+                minHeight: '100px',
+                padding: '8px',
+                backgroundColor: snapshot.isDraggingOver ? 'rgba(25, 118, 210, 0.08)' : 'transparent',
+                transition: 'background-color 0.2s ease'
+              }}
+            >
+              {sections.map((section, index) => (
+                <Section 
+                  key={section.id} 
+                  section={section}
+                  index={index}
+                />
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </Paper>
     </Box>
   );
 };

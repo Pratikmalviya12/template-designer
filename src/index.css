@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Ensure droppable area is always visible */
+[data-rbd-droppable-id="canvas-sections"] {
+  min-height: 100px !important;
+}
+
+/* Improve placeholder styling */
+.react-beautiful-dnd-placeholder {
+  background-color: rgba(25, 118, 210, 0.1);
+  border: 1px dashed #1976d2;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}

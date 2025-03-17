@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
-import { Paper, IconButton, Tooltip, Box, Typography, TextField } from '@mui/material';
-import { Delete, ContentCopy, DragIndicator, Edit } from '@mui/icons-material';
-import { Section as SectionType, useStore } from '../store/useStore';
-import Column from './Column';
-import { Draggable } from 'react-beautiful-dnd';
+import React, { useState } from "react";
+import {
+  Paper,
+  IconButton,
+  Tooltip,
+  Box,
+  Typography,
+  TextField,
+} from "@mui/material";
+import { Delete, ContentCopy, DragIndicator, Edit } from "@mui/icons-material";
+import { Section as SectionType, useStore } from "../store/useStore";
+import Column from "./Column";
+import { Draggable } from "react-beautiful-dnd";
 
 interface SectionProps {
   section: SectionType;
@@ -15,12 +22,12 @@ const Section: React.FC<SectionProps> = ({ section, index }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedId, setEditedId] = useState(section.id);
-  
+
   const getGridColumns = (columns: number): Record<string, string | number> => {
     return {
-      display: 'grid',
+      display: "grid",
       gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-      width: '100%'
+      width: "100%",
     };
   };
 
@@ -31,75 +38,96 @@ const Section: React.FC<SectionProps> = ({ section, index }) => {
   return (
     <Draggable draggableId={section.id} index={index}>
       {(provided, snapshot) => (
-        <Paper 
+        <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          elevation={snapshot.isDragging ? 4 : 2}
-          sx={{  
-            position: 'relative',
-            width: '100%',
-            minHeight: '100px',
-            transform: snapshot.isDragging ? 'rotate(1deg)' : 'none',
-            '&:hover': {
-              boxShadow: (theme) => theme.shadows[4]
-            }
+          style={{
+            ...provided.draggableProps.style,
+            marginBottom: "16px",
           }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
         >
-          {isHovered && (
-            <Box sx={{
-              position: 'absolute',
-              top: -30,
-              right: 8,
-              bgcolor: 'white',
-              borderRadius: 1,
-              boxShadow: 2,
-              display: 'flex',
-              zIndex: 1
-            }}>
-              <Tooltip title="Drag section">
-                <div {...provided.dragHandleProps}>
-                  <IconButton size="small">
-                    <DragIndicator fontSize="small" />
-                  </IconButton>
-                </div>
-              </Tooltip>
-              <Tooltip title="Edit section ID">
-                <IconButton size="small" onClick={() => setIsEditing(true)}>
-                  <Edit fontSize="small" />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Duplicate section">
-                <IconButton size="small" onClick={() => duplicateSection(section.id)}>
-                  <ContentCopy fontSize="small" />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Delete section">
-                <IconButton size="small" onClick={() => removeSection(section.id)}>
-                  <Delete fontSize="small" />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          )}
-
-          <Box
+          <Paper
+            elevation={snapshot.isDragging ? 4 : 2}
+            sx={{
+              position: "relative",
+              width: "100%",
+              minHeight: "100px",
+              transform: snapshot.isDragging ? "rotate(1deg)" : "none",
+              "&:hover": {
+                boxShadow: (theme) => theme.shadows[4],
+              },
+            }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            <Box
               sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                zIndex: 10
+                position: "absolute",
+                top: -30,
+                right: 8,
+                bgcolor: "white",
+                borderRadius: 1,
+                boxShadow: 2,
+                display: "flex",
+                zIndex: 1,
+              }}
+            >
+              {isHovered && (
+                <>
+                  <Tooltip title="Drag section" {...provided.dragHandleProps}>
+                    <IconButton size="small">
+                      <DragIndicator fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Edit section ID">
+                    <IconButton size="small" onClick={() => setIsEditing(true)}>
+                      <Edit fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Duplicate section">
+                    <IconButton
+                      size="small"
+                      onClick={() => duplicateSection(section.id)}
+                    >
+                      <ContentCopy fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Delete section">
+                    <IconButton
+                      size="small"
+                      onClick={() => removeSection(section.id)}
+                    >
+                      <Delete fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                </>
+              )}
+            </Box>
+
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                zIndex: 10,
               }}
             >
               {isEditing ? (
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, backgroundColor: 'white' }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    backgroundColor: "white",
+                  }}
+                >
                   <TextField
                     size="small"
                     value={editedId}
                     onChange={(e) => setEditedId(e.target.value)}
                     onBlur={handleEditSave}
-                    onKeyPress={(e) => e.key === 'Enter' && handleEditSave()}
+                    onKeyPress={(e) => e.key === "Enter" && handleEditSave()}
                     autoFocus
                   />
                 </Box>
@@ -113,21 +141,22 @@ const Section: React.FC<SectionProps> = ({ section, index }) => {
                 </Typography>
               )}
             </Box>
-        
-          <Box sx={getGridColumns(section.columns)}>
-            {Array.from({ length: section.columns }).map((_, index) => (
-              <Column
-                key={index}
-                sectionId={section.id}
-                columnIndex={index}
-                components={section.components[index] || []}
-              />
-            ))}
-          </Box>
-        </Paper>
+
+            <Box sx={getGridColumns(section.columns)}>
+              {Array.from({ length: section.columns }).map((_, index) => (
+                <Column
+                  key={index}
+                  sectionId={section.id}
+                  columnIndex={index}
+                  components={section.components[index] || []}
+                />
+              ))}
+            </Box>
+          </Paper>
+        </div>
       )}
     </Draggable>
   );
 };
 
-export default Section; 
+export default Section;
