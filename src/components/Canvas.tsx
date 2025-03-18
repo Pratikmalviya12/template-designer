@@ -1,20 +1,37 @@
-import React from 'react';
-import { Paper, Typography, Box, TextField, Stack, Button } from '@mui/material';
-import { useStore } from '../store/useStore';
-import Section from './Section';
-import { Droppable } from 'react-beautiful-dnd';
-import { Download as DownloadIcon } from '@mui/icons-material';
+import React from "react";
+import {
+  Paper,
+  Typography,
+  Box,
+  TextField,
+  Stack,
+  Button,
+} from "@mui/material";
+import { useStore } from "../store/useStore";
+import Section from "./Section";
+import { Droppable } from "react-beautiful-dnd";
+import { Download as DownloadIcon } from "@mui/icons-material";
 
 const Canvas: React.FC = () => {
-  const { sections, canvasWidth, canvasHeight, updateCanvasDimensions, currentTemplate, updateTemplateName, generateTemplateHtml } = useStore();
+  const {
+    sections,
+    canvasWidth,
+    canvasHeight,
+    updateCanvasDimensions,
+    currentTemplate,
+    updateTemplateName,
+    generateTemplateHtml,
+  } = useStore();
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     const html = generateTemplateHtml();
-    const blob = new Blob([html], { type: 'text/html' });
+    const blob = new Blob([html], { type: "text/html" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `${currentTemplate.name.toLowerCase().replace(/\s+/g, '-')}.html`;
+    a.download = `${currentTemplate.name
+      .toLowerCase()
+      .replace(/\s+/g, "-")}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -22,17 +39,19 @@ const Canvas: React.FC = () => {
   };
 
   return (
-    <Box sx={{ 
-      flexGrow: 1, 
-      p: 3, 
-      overflowY: 'auto',
-      '& *': {
-        boxSizing: 'border-box'
-      }
-    }}>
-      <Stack 
-        direction="row" 
-        spacing={2} 
+    <Box
+      sx={{
+        flexGrow: 1,
+        p: 3,
+        overflowY: "auto",
+        "& *": {
+          boxSizing: "border-box",
+        },
+      }}
+    >
+      <Stack
+        direction="row"
+        spacing={2}
         sx={{ mb: 2 }}
         justifyContent="center"
         alignItems="center"
@@ -62,48 +81,49 @@ const Canvas: React.FC = () => {
           variant="contained"
           startIcon={<DownloadIcon />}
           onClick={handleDownload}
-          sx={{ ml: 'auto !important' }}
+          sx={{ ml: "auto !important" }}
         >
           Download Template
         </Button>
       </Stack>
 
-      <Paper sx={{ 
-        p: 3,
-        margin: 'auto',
-        minHeight: canvasHeight,
-        bgcolor: 'white',
-        width: canvasWidth
-      }}>
-        <Typography 
-          variant="h6" 
-          sx={{ 
-            mb: 2, 
-            textAlign: 'center', 
-            color: 'text.secondary' 
+      <Paper
+        sx={{
+          p: 3,
+          margin: "auto",
+          minHeight: canvasHeight,
+          bgcolor: "white",
+          width: canvasWidth,
+        }}
+      >
+        <Typography
+          variant="h6"
+          sx={{
+            mb: 2,
+            textAlign: "center",
+            color: "text.secondary",
           }}
         >
-          {sections.length === 0 && 'Select sections from the sidebar to start designing'}
+          {sections.length === 0 &&
+            "Select sections from the sidebar to start designing"}
         </Typography>
-        
+
         <Droppable droppableId="canvas-sections">
           {(provided, snapshot) => (
-            <div 
+            <div
               ref={provided.innerRef}
               {...provided.droppableProps}
-              style={{ 
-                minHeight: '100px',
-                padding: '8px',
-                backgroundColor: snapshot.isDraggingOver ? 'rgba(25, 118, 210, 0.08)' : 'transparent',
-                transition: 'background-color 0.2s ease'
+              style={{
+                minHeight: "100px",
+                padding: "8px",
+                backgroundColor: snapshot.isDraggingOver
+                  ? "rgba(25, 118, 210, 0.08)"
+                  : "transparent",
+                transition: "background-color 0.2s ease",
               }}
             >
               {sections.map((section, index) => (
-                <Section 
-                  key={section.id} 
-                  section={section}
-                  index={index}
-                />
+                <Section key={section.id} section={section} index={index} />
               ))}
               {provided.placeholder}
             </div>

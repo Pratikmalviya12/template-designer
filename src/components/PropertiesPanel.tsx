@@ -26,7 +26,7 @@ import {
   LinkedIn,
   YouTube,
   Pinterest,
-} from '@mui/icons-material';
+} from "@mui/icons-material";
 
 interface MenuItemType {
   text: string;
@@ -54,11 +54,8 @@ export interface ComponentDefaults {
 }
 
 const PropertiesPanel: React.FC = () => {
-  const {
-    selectedComponent,
-    updateComponent,
-    updateComponentStyle,
-  } = useStore();
+  const { selectedComponent, updateComponent, updateComponentStyle } =
+    useStore();
 
   const [activeTab, setActiveTab] = useState(0);
 
@@ -104,35 +101,39 @@ const PropertiesPanel: React.FC = () => {
     }
   };
 
-  const handleSocialMediaUpdate = (index: number, updates: Partial<SocialMediaItem>) => {
-    const currentSocialMedia = selectedComponent.component.properties?.socialMedia || [];
+  const handleSocialMediaUpdate = (
+    index: number,
+    updates: Partial<SocialMediaItem>
+  ) => {
+    const currentSocialMedia =
+      selectedComponent.component.properties?.socialMedia || [];
     const updatedSocialMedia = [...currentSocialMedia];
     updatedSocialMedia[index] = {
       ...updatedSocialMedia[index],
-      ...updates
+      ...updates,
     };
 
     updateComponent(selectedComponent.component.id, {
       properties: {
         ...selectedComponent.component.properties,
-        socialMedia: updatedSocialMedia
-      }
+        socialMedia: updatedSocialMedia,
+      },
     });
   };
 
   const getSocialIcon = (type: string) => {
-    switch(type) {
-      case 'facebook':
+    switch (type) {
+      case "facebook":
         return <Facebook />;
-      case 'twitter':
+      case "twitter":
         return <Twitter />;
-      case 'instagram':
+      case "instagram":
         return <Instagram />;
-      case 'linkedin':
+      case "linkedin":
         return <LinkedIn />;
-      case 'youtube':
+      case "youtube":
         return <YouTube />;
-      case 'pinterest':
+      case "pinterest":
         return <Pinterest />;
       default:
         return null;
@@ -367,16 +368,37 @@ const PropertiesPanel: React.FC = () => {
               fullWidth
             />
             <FormControl fullWidth>
-              <InputLabel>Button Type</InputLabel>
+              <InputLabel>Button Status</InputLabel>
               <Select
-                value={selectedComponent.component.properties?.buttonType || "primary"}
-                onChange={(e) =>
-                  handlePropertyChange("buttonType", e.target.value)
+                value={
+                  selectedComponent.component.properties?.status || "primary"
                 }
-                label="Button Type"
+                onChange={(e) =>
+                  handlePropertyChange("status", e.target.value)
+                }
+                label="Button Status"
               >
                 <MenuItem value="primary">Primary</MenuItem>
                 <MenuItem value="secondary">Secondary</MenuItem>
+                <MenuItem value="success">Success</MenuItem>
+                <MenuItem value="info">Info</MenuItem>
+                <MenuItem value="warning">Warning</MenuItem>
+                <MenuItem value="error">Error</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel>Button Variant</InputLabel>
+              <Select
+                value={
+                  selectedComponent.component.properties?.variant || "contained"
+                }
+                onChange={(e) =>
+                  handlePropertyChange("variant", e.target.value)
+                }
+                label="Button variant"
+              >
+                <MenuItem value="contained">Contained</MenuItem>
+                <MenuItem value="text">Text</MenuItem>
                 <MenuItem value="outline">Outline</MenuItem>
               </Select>
             </FormControl>
@@ -436,13 +458,12 @@ const PropertiesPanel: React.FC = () => {
               control={
                 <Switch
                   checked={
-                    selectedComponent.component.properties?.responsive ===
-                    "true"
+                    selectedComponent.component.properties?.responsive === true
                   }
                   onChange={(e) =>
                     handlePropertyChange(
                       "responsive",
-                      e.target.checked ? "true" : "false"
+                      e.target.checked ? true : false
                     )
                   }
                 />
@@ -489,9 +510,7 @@ const PropertiesPanel: React.FC = () => {
             <FormControlLabel
               control={
                 <Switch
-                  checked={
-                    selectedComponent.component.properties?.controls
-                  }
+                  checked={selectedComponent.component.properties?.controls}
                   onChange={(e) =>
                     handlePropertyChange(
                       "controls",
@@ -505,13 +524,11 @@ const PropertiesPanel: React.FC = () => {
             <FormControlLabel
               control={
                 <Switch
-                  checked={
-                    selectedComponent.component.properties?.autoplay
-                  }
+                  checked={selectedComponent.component.properties?.autoplay}
                   onChange={(e) =>
                     handlePropertyChange(
                       "autoplay",
-                      e.target.checked ? "true" : "false"
+                      e.target.checked ? true : false
                     )
                   }
                 />
@@ -521,13 +538,11 @@ const PropertiesPanel: React.FC = () => {
             <FormControlLabel
               control={
                 <Switch
-                  checked={
-                    selectedComponent.component.properties?.loop
-                  }
+                  checked={selectedComponent.component.properties?.loop}
                   onChange={(e) =>
                     handlePropertyChange(
                       "loop",
-                      e.target.checked ? "true" : "false"
+                      e.target.checked ? true : false
                     )
                   }
                 />
@@ -538,12 +553,12 @@ const PropertiesPanel: React.FC = () => {
               control={
                 <Switch
                   checked={
-                    selectedComponent.component.properties?.muted === "true"
+                    selectedComponent.component.properties?.muted === true
                   }
                   onChange={(e) =>
                     handlePropertyChange(
                       "muted",
-                      e.target.checked ? "true" : "false"
+                      e.target.checked ? true : false
                     )
                   }
                 />
@@ -554,13 +569,12 @@ const PropertiesPanel: React.FC = () => {
               control={
                 <Switch
                   checked={
-                    selectedComponent.component.properties?.playsInline ===
-                    "true"
+                    selectedComponent.component.properties?.playsInline === true
                   }
                   onChange={(e) =>
                     handlePropertyChange(
                       "playsInline",
-                      e.target.checked ? "true" : "false"
+                      e.target.checked ? true : false
                     )
                   }
                 />
@@ -623,6 +637,20 @@ const PropertiesPanel: React.FC = () => {
       case "menu":
         return (
           <Stack spacing={2}>
+            <FormControl fullWidth>
+              <InputLabel>Menu Direction</InputLabel>
+              <Select
+                label="Menu Direction"
+                value={selectedComponent.component.properties?.menuDirection}
+                onChange={(e) => {
+                  handlePropertyChange("menuDirection", e.target.value);
+                }}
+                fullWidth
+              >
+                <MenuItem value="row">Row</MenuItem>
+                <MenuItem value="column">Column</MenuItem>
+              </Select>
+            </FormControl>
             <Typography variant="subtitle2">Menu Items</Typography>
             {(selectedComponent.component.properties?.menuItems || []).map(
               (item: MenuItemType, index: number) => (
@@ -730,37 +758,46 @@ const PropertiesPanel: React.FC = () => {
                 sx={{
                   mb: 2,
                   p: 2,
-                  border: '1px solid',
-                  borderColor: 'divider',
+                  border: "1px solid",
+                  borderColor: "divider",
                   borderRadius: 1,
                 }}
               >
-                <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 1 }}>
-                  <Tooltip title={item.type.charAt(0).toUpperCase() + item.type.slice(1)}>
+                <Stack
+                  direction="row"
+                  spacing={2}
+                  alignItems="center"
+                  sx={{ mb: 1 }}
+                >
+                  <Tooltip
+                    title={
+                      item.type.charAt(0).toUpperCase() + item.type.slice(1)
+                    }
+                  >
                     <IconButton
                       size="small"
                       sx={{
-                        color: item.enabled ? 'inherit' : 'action.disabled',
-                        '&:hover': {
-                          color: theme => {
-                            switch(item.type) {
-                              case 'facebook':
-                                return '#1877F2';
-                              case 'twitter':
-                                return '#1DA1F2';
-                              case 'instagram':
-                                return '#E4405F';
-                              case 'linkedin':
-                                return '#0A66C2';
-                              case 'youtube':
-                                return '#FF0000';
-                              case 'pinterest':
-                                return '#BD081C';
+                        color: item.enabled ? "inherit" : "action.disabled",
+                        "&:hover": {
+                          color: (theme) => {
+                            switch (item.type) {
+                              case "facebook":
+                                return "#1877F2";
+                              case "twitter":
+                                return "#1DA1F2";
+                              case "instagram":
+                                return "#E4405F";
+                              case "linkedin":
+                                return "#0A66C2";
+                              case "youtube":
+                                return "#FF0000";
+                              case "pinterest":
+                                return "#BD081C";
                               default:
                                 return theme.palette.primary.main;
                             }
-                          }
-                        }
+                          },
+                        },
                       }}
                     >
                       {getSocialIcon(item.type)}
@@ -770,7 +807,11 @@ const PropertiesPanel: React.FC = () => {
                     control={
                       <Switch
                         checked={item.enabled}
-                        onChange={(e) => handleSocialMediaUpdate(index, { enabled: e.target.checked })}
+                        onChange={(e) =>
+                          handleSocialMediaUpdate(index, {
+                            enabled: e.target.checked,
+                          })
+                        }
                         size="small"
                       />
                     }
@@ -782,7 +823,9 @@ const PropertiesPanel: React.FC = () => {
                   size="small"
                   label="URL"
                   value={item.url}
-                  onChange={(e) => handleSocialMediaUpdate(index, { url: e.target.value })}
+                  onChange={(e) =>
+                    handleSocialMediaUpdate(index, { url: e.target.value })
+                  }
                   sx={{ mt: 1 }}
                 />
               </Box>

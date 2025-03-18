@@ -42,7 +42,7 @@ export interface ComponentProperties {
   controls?: boolean;
   autoplay?: boolean;
   loop?: boolean;
-  responsive?: string;
+  responsive?: boolean;
   endDate?: string;
   format?: string;
   menuItems?: Array<{ text: string; url: string; }>;
@@ -518,7 +518,7 @@ export const componentDefaults: Record<ComponentType, ComponentDefaults> = {
     },
     properties: {
       altText: 'Image description',
-      responsive: 'true',
+      responsive: true,
       src: 'https://via.placeholder.com/600x300'
     }
   },
@@ -526,9 +526,12 @@ export const componentDefaults: Record<ComponentType, ComponentDefaults> = {
     content: 'Click Me',
     style: {
       padding: '8px 16px',
-      backgroundColor: '#1976d2',
       color: '#ffffff',
       borderRadius: '4px'
+    },
+    properties: {
+      status: 'secondary',
+      variant: 'contained'
     }
   },
   video: {
@@ -543,6 +546,9 @@ export const componentDefaults: Record<ComponentType, ComponentDefaults> = {
       controls: true,
       autoplay: false,
       loop: false,
+      preload: 'auto',
+      playsinline: true,
+      muted: false,
       src: 'https://via.placeholder.com/600x300'
     }
   },
@@ -577,6 +583,7 @@ export const componentDefaults: Record<ComponentType, ComponentDefaults> = {
     content: '',
     style: {},
     properties: {
+      menuDirection: 'row',
       menuItems: [
         { text: 'Home', url: '#' },
         { text: 'About', url: '#' },

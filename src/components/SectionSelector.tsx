@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Paper, Typography, Box } from '@mui/material';
+import { Grid, Paper, Box } from '@mui/material';
 import { useStore } from '../store/useStore';
 
 const SectionSelector: React.FC = () => {
@@ -31,7 +31,7 @@ const SectionSelector: React.FC = () => {
   return (
     <Grid container spacing={1}>
       {Array.from({ length: 12 }, (_, i) => i + 1).map((columns) => (
-        <Grid item xs={4} key={columns}>
+        <Grid item xs={12} key={columns}>
           <Paper
             sx={{
               p: 1,
@@ -46,15 +46,6 @@ const SectionSelector: React.FC = () => {
             }}
             onClick={() => addSection(columns)}
           >
-            <Typography 
-              variant="caption" 
-              display="block" 
-              align="center" 
-              gutterBottom
-              sx={{ fontSize: '0.7rem' }}
-            >
-              {columns} {columns === 1 ? 'Column' : 'Columns'}
-            </Typography>
             {renderColumnPreview(columns)}
           </Paper>
         </Grid>

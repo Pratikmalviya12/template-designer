@@ -1,6 +1,15 @@
 import React from "react";
 import { Box, Button, IconButton, Paper, Tooltip } from "@mui/material";
-import { ContentCopy, Delete, Facebook, Twitter, Instagram, LinkedIn, YouTube, Pinterest } from "@mui/icons-material";
+import {
+  ContentCopy,
+  Delete,
+  Facebook,
+  Twitter,
+  Instagram,
+  LinkedIn,
+  YouTube,
+  Pinterest,
+} from "@mui/icons-material";
 import { Draggable } from "react-beautiful-dnd";
 import {
   useStore,
@@ -36,20 +45,20 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({
 
   const renderSocialIcons = () => {
     const socialMedia = component.properties?.socialMedia || [];
-    
+
     const getIcon = (type: string) => {
-      switch(type) {
-        case 'facebook':
+      switch (type) {
+        case "facebook":
           return <Facebook />;
-        case 'twitter':
+        case "twitter":
           return <Twitter />;
-        case 'instagram':
+        case "instagram":
           return <Instagram />;
-        case 'linkedin':
+        case "linkedin":
           return <LinkedIn />;
-        case 'youtube':
+        case "youtube":
           return <YouTube />;
-        case 'pinterest':
+        case "pinterest":
           return <Pinterest />;
         default:
           return null;
@@ -57,15 +66,17 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({
     };
 
     return (
-      <Box sx={{ 
-        display: 'flex', 
-        gap: '12px',
-        justifyContent: 'center',
-        alignItems: 'center',
-        ...component.style
-      }}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: "12px",
+          justifyContent: "center",
+          alignItems: "center",
+          ...component.style,
+        }}
+      >
         {socialMedia
-          .filter(item => item.enabled)
+          .filter((item) => item.enabled)
           .map((item, i) => (
             <IconButton
               key={`${item.type}-${i}`}
@@ -74,27 +85,27 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               sx={{
-                color: 'inherit',
-                '&:hover': {
-                  color: theme => {
-                    switch(item.type) {
-                      case 'facebook':
-                        return '#1877F2';
-                      case 'twitter':
-                        return '#1DA1F2';
-                      case 'instagram':
-                        return '#E4405F';
-                      case 'linkedin':
-                        return '#0A66C2';
-                      case 'youtube':
-                        return '#FF0000';
-                      case 'pinterest':
-                        return '#BD081C';
+                color: "inherit",
+                "&:hover": {
+                  color: (theme) => {
+                    switch (item.type) {
+                      case "facebook":
+                        return "#1877F2";
+                      case "twitter":
+                        return "#1DA1F2";
+                      case "instagram":
+                        return "#E4405F";
+                      case "linkedin":
+                        return "#0A66C2";
+                      case "youtube":
+                        return "#FF0000";
+                      case "pinterest":
+                        return "#BD081C";
                       default:
                         return theme.palette.primary.main;
                     }
-                  }
-                }
+                  },
+                },
               }}
             >
               {getIcon(item.type)}
@@ -123,11 +134,9 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({
           <Paper
             elevation={isSelected ? 2 : 0}
             sx={{
-              p: 2,
               border: isSelected
                 ? "2px solid #1976d2"
                 : "1px solid transparent",
-              ...component.style,
             }}
           >
             {component.type === "image" ? (
@@ -143,50 +152,90 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({
                 controls={component.properties?.controls}
                 loop={component.properties?.loop}
                 autoPlay={component.properties?.autoplay}
+                preload={component.properties?.preload}
+                playsInline={component.properties?.playsinline}
+                muted={component.properties?.muted}
               />
-            ) : 
-              component.type === "timer" ? (
-                <div className="timer" style={{ whiteSpace: "pre-wrap", wordWrap: "break-word"}}>
-                  {component.properties?.endDate}
-                </div>
-              )
-              :
-              component.type === "menu" ? (
-                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                  {component.properties?.menuItems?.map((item, index) => (
-                    <li key={index}>{item.text}</li>
-                  ))}
-                </ul>
-              ):
-              component.type === "heading" ? (
-                component.properties?.level ? 
-                React.createElement(component.properties?.level, {
-                  style: { whiteSpace: "pre-wrap", wordWrap: "break-word", margin: 0 }
-                }, component.content)
-                :
-                <h2 style={{ whiteSpace: "pre-wrap", wordWrap: "break-word", margin: 0 }}>
+            ) : component.type === "timer" ? (
+              <div style={component.style as React.CSSProperties}>
+                {component.properties?.endDate}
+              </div>
+            ) : component.type === "menu" ? (
+              <ul
+                style={{
+                  display: "flex",
+                  listStyle: "none",
+                  padding: 0,
+                  margin: 0,
+                  ...(component.style as React.CSSProperties),
+                  flexDirection: component.properties?.menuDirection,
+                }}
+              >
+                {component.properties?.menuItems?.map((item, index) => (
+                  <li style={{ padding: "5px", cursor: "pointer" }} key={index}>
+                    {item.text}
+                  </li>
+                ))}
+              </ul>
+            ) : component.type === "heading" ? (
+              component.properties?.level ? (
+                React.createElement(
+                  component.properties?.level,
+                  {
+                    style: {
+                      whiteSpace: "pre-wrap",
+                      wordWrap: "break-word",
+                      margin: 0,
+                      ...component.style,
+                    },
+                  },
+                  component.content
+                )
+              ) : (
+                <h2
+                  style={{
+                    whiteSpace: "pre-wrap",
+                    wordWrap: "break-word",
+                    margin: 0,
+                    ...(component.style as React.CSSProperties),
+                  }}
+                >
                   {component.content}
                 </h2>
               )
-              :component.type === "button" ? (
-                <Button sx={{ ...component.style as React.CSSProperties }}>
-                  {component.content}
-                </Button>
-              )
-              :component.type === "paragraph" ? (
-                <p style={{ whiteSpace: "pre-wrap", wordWrap: "break-word", margin: 0 }}>
-                  {component.content}
-                </p>
-              )
-              :component.type === "social" ? (
-                renderSocialIcons()
-              )
-              : (
-                <div style={{ whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
-                  {component.content}
-                </div>
-              )
-              }
+            ) : component.type === "button" ? (
+              <Button
+              size={component.properties?.size || "medium"}
+               color={component.properties?.status || "primary"}
+                variant={component.properties?.variant || "contained"}
+                style={component.style as React.CSSProperties}
+              >
+                {component.content}
+              </Button>
+            ) : component.type === "paragraph" ? (
+              <p
+                style={{
+                  whiteSpace: "pre-wrap",
+                  wordWrap: "break-word",
+                  margin: 0,
+                  ...(component.style as React.CSSProperties),
+                }}
+              >
+                {component.content}
+              </p>
+            ) : component.type === "social" ? (
+              renderSocialIcons()
+            ) : (
+              <div
+                style={{
+                  whiteSpace: "pre-wrap",
+                  wordWrap: "break-word",
+                  ...(component.style as React.CSSProperties),
+                }}
+              >
+                {component.content}
+              </div>
+            )}
             <Box
               className="component-actions"
               sx={{
